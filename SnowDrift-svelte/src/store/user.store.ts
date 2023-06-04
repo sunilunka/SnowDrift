@@ -1,9 +1,4 @@
-import axios from "axios";
-import { AxiosError } from "axios";
 import { readable } from "svelte/store";
-
-import type AxiosResponse from "axios";
-
 
 type UserData = {
     username: string;
@@ -17,14 +12,27 @@ let initialData: UserData = {
 
 
 export const userdata = readable(initialData, function(set){
-    axios.get("http://localhost:8666/session/check_setup_ok")
-        .then(function(response){
+    fetch("http://localhost:8666/session/check_setup_ok")
+        .then(function(response: Response){
             console.dir(response);
             if(response.status === 200) {
-                console.log(`${response.data}`);
+                console.log("Response code: ", response.status);
             } else {
                 console.log("Sorry, credentials may have already been setup.");
             }
+            return response;
+        })
+        .then(function(response: Response){
+            switch(response.headers.get("content-type")) {
+                case "text/plain":
+                    return response.text();
+                default:
+                    return response.json();
+            }
+        })
+        .then(function(data){
+            console.log("RETURNED DATA");
+            console.log(data);
         })
         .catch(function(err){
             console.log(`ERROR: ${err}`)
