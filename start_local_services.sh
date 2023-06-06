@@ -4,4 +4,4 @@ echo "*** Starting Proxy Services ***"
 cd ./development-proxy
 echo "--> Changed to $(pwd)"
 echo "--> Starting proxy container..."
-docker run -p 8666:8666 dev-proxy:latest
+docker run --rm -p 8666:8666 dev-proxy:latest

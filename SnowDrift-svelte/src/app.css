@@ -12,6 +12,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  --warning-border: #711E1E;
 }
 
 a {
@@ -78,4 +79,9 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+.warning {
+  background-color: #c08e8e;
+  color: var(--warning-border);
+  border: 1px solid var(--warning-border);
 }
