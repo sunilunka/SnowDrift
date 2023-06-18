@@ -94,8 +94,7 @@ export class SnowDriftRequest {
      */
     private isDevelopment(): boolean {
         return (this.port !== this.PROD_PORT) 
-        || (this.port !== "80") 
-        || (this.port !== "");
+        || (this.port !== "80") || (this.port.length <= 0)
     }
     
     /**
@@ -104,7 +103,7 @@ export class SnowDriftRequest {
     private setBaseParameters(): void {
         if(this.isDevelopment()) {
             this.protocol = "http"
-            this.hostname = "localhost"
+            this.host = "localhost"
             this.port = "8666";
         }
     }

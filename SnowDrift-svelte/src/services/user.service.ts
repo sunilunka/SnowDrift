@@ -13,11 +13,14 @@ export enum CredCheck {
 
 class SnowDriftUserService {
 
+    sessionRequest: SnowDriftRequest;
+    isDevelopment: boolean = false;
 
     constructor() {
         this.sessionRequest = new SnowDriftRequest({
             pathprefix: "session"
         })
+        this.isDevelopment = this.sessionRequest.isDev();
     }
 
     requestUserSetupStatus(config: RequestConfig): Promise<Response> {
@@ -25,7 +28,14 @@ class SnowDriftUserService {
     };
 
     requestSessionCheck(config: RequestConfig, username?: string = "", password?: string = ""): Promise<Response> {
-        return this.sessionRequest.get("/check_session", config);
+        let creds = "";
+
+        if(this.isDevelopment) { 
+            creds = `?username=${username}&password=${password}`
+        } else {
+
+        }
+        return this.sessionRequest.get(`/check_session${creds}`, config);
     }
 
     requestSetCredentials(config: RequestConfig, username: string, password: string): Promise<Response> {

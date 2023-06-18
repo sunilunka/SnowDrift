@@ -5,14 +5,14 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #0c0e1a;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-  --warning-border: #711E1E;
+  --warning-border: #E86565;
 }
 
 a {
@@ -81,7 +81,7 @@ button:focus-visible {
   }
 }
 .warning {
-  background-color: #c08e8e;
+  background-color: transparent;
   color: var(--warning-border);
   border: 1px solid var(--warning-border);
 }

@@ -53,7 +53,6 @@ export const userdata = writable(initialData, function(set){
             console.dir(response);
             switch(response.status) {
                 case 200:
-                    console.log("Response code: ", response.status);
                     // Can't use Authorization header in development environment as it makes the HTTP request not 'simple' for cors.
                     if(isDevelopment) {
                         return UserService.requestSessionCheck(getConfig)
@@ -77,8 +76,6 @@ export const userdata = writable(initialData, function(set){
                     return response;
                     break;
                 default:
-                    console.log("THIS: ");
-                    console.log(this);
                     response["login_status"] = CredCheck.CREDENTIALS_ERROR;
                     return response;
                     break;
@@ -106,7 +103,7 @@ export const userdata = writable(initialData, function(set){
                 default:
                     set({
                         ...initialData,
-                        login_error: `ERROR: ${response.statusText}`
+                        login_error: `Error Status: ${response.status} - ${response.statusText}`
                     });
                     break;
             }
