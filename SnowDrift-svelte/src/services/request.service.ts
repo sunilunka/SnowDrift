@@ -16,6 +16,11 @@ export interface RequestConfig {
     credentials?: "include" | "same-origin" | "omit"; // Default is "same-origin"
     redirect?: "manual" | "follow" | "error"; // Default "follow" 
     referrerPolicy?: "no-referrer" | "no-referrer-when-downgrade" | "origin" | "origin-when-cross-origin" | "same-origin" | "strict-origin" | "strict-origin-when-cross-origin" | "unsafe-url"; // Default "no-referrer-when-downgrade"
+    body?: Blob | DataView | FormData | URLSearchParams;
+    set?(key: string, value: string | number | object);
+    get?(key: string);
+    remove?(key: string): void;
+    update?(key: string, value: string | number | object): void;
 }
 
 /**
@@ -94,7 +99,7 @@ export class SnowDriftRequest {
      */
     private isDevelopment(): boolean {
         return (this.port !== this.PROD_PORT) 
-        || (this.port !== "80") || (this.port.length <= 0)
+        && (this.port !== "80") && (!this.port)
     }
     
     /**
@@ -109,6 +114,8 @@ export class SnowDriftRequest {
     }
 
     isDev(): boolean {
+        console.log("IS DEV::")
+        console.dir(this);
         return this.devEnvironment;
     }
 
@@ -130,7 +137,7 @@ export class SnowDriftRequest {
         }
 
         if(!config.hasOwnProperty("body")) {
-            config["body"] = {};
+            config.set("body", new Blob());
         }
 
         return fetch(`${this.buildBaseUrl()}${path}`, config);

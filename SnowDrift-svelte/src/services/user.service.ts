@@ -23,23 +23,29 @@ class SnowDriftUserService {
         this.isDevelopment = this.sessionRequest.isDev();
     }
 
+    generateAuthHeaderValue(username: string, password: string): string {
+        let creds = btoa(`${username}:${password}`);
+        return `Basic ${creds}`;
+    }
+
     requestUserSetupStatus(config: RequestConfig): Promise<Response> {
         return this.sessionRequest.get("/check_setup_ok", config);
     };
 
-    requestSessionCheck(config: RequestConfig, username?: string = "", password?: string = ""): Promise<Response> {
+    requestSessionCheck(config: RequestConfig, username?: string, password?: string): Promise<Response> {
         let creds = "";
 
         if(this.isDevelopment) { 
             creds = `?username=${username}&password=${password}`
         } else {
-
+            config.headers.set("Authorization", this.generateAuthHeaderValue(username, password))
         }
         return this.sessionRequest.get(`/check_session${creds}`, config);
     }
 
     requestSetCredentials(config: RequestConfig, username: string, password: string): Promise<Response> {
-        return this.session.post("/set_password", { username: username, password: password });
+        config.set("body", { username: username, password: password });
+        return this.sessionRequest.post("/set_password", config, );
     }
 }
 

@@ -34,16 +34,10 @@ let checkCredsValid = function(response: Response): Response {
     return response;
 }
 
-let validityError = function(response: Response): Response {
-    throw new Error(response.responseText);  
+let validityError = function(error): Response {
+    throw new Error(error);  
 }
 
-let generateAuthHeaderValue = function(username: String, password: String): String {
-    let creds = btoa(`${username}:${password}`);
-    return `Basic ${creds}`;
-}
-
-let isDevelopment = true;
 
 export const userdata = writable(initialData, function(set){
     getConfig.headers.set("Content-Type", "text/plain; application/json");
@@ -53,17 +47,9 @@ export const userdata = writable(initialData, function(set){
             console.dir(response);
             switch(response.status) {
                 case 200:
-                    // Can't use Authorization header in development environment as it makes the HTTP request not 'simple' for cors.
-                    if(isDevelopment) {
-                        return UserService.requestSessionCheck(getConfig)
-                            .then(checkCredsValid)
-                            .catch(validityError);
-                    } else {
-                        getConfig.headers.set("Authorization", generateAuthHeaderValue(username, password));
-                        return UserService.requestSessionCheck(getConfig)
-                            .then(checkCredsValid)
-                            .catch(validityError);
-                    }
+                    return UserService.requestSessionCheck(getConfig, initialData.username, initialData.password)
+                        .then(checkCredsValid)
+                        .catch(validityError);
                     break;
                 case 406:
                     console.log("Credentials are hard coded into config file");
@@ -85,7 +71,7 @@ export const userdata = writable(initialData, function(set){
             switch(response["login_status"]){
                 case CredCheck.CREDENTIALS_VALID:
                     set({
-                        ...initalData,
+                        ...initialData,
                         logged_in: true
                     });
                     break;
